@@ -1,47 +1,67 @@
+#include <algorithm>
+#include <list>
 #include <iostream>
 #include <typeinfo>
 #include <string>
 #include <utility>
 
-
-class person
-{
-  public:
-
-   person(const std::string& n) : _name(n) {}
-   virtual const std::string& name() const{ return _name; }
-
-  private:
-
-    std::string _name;
+class Shape {
+    public: virtual ~Shape(){}
 };
 
-class employee : public person
-{
-   public:
-
-     employee(const std::string& n, const std::string& p) :
-         person(n), _profession(p) {}
-
-     const std::string& profession() const { return _profession; }
-
-   private:
-
-     std::string _profession;
+class Circle : public Shape {
 };
 
-void somefunc(const person& p)
-{
-   if(typeid(employee) == typeid(p))
-   {
-      std::cout << p.name() << " is an employee ";
-      const employee& emp = dynamic_cast<const employee&>(p);
-      std::cout << "who works in " << emp.profession() << '\n';
-   }
-}
+class Rectangle : public Shape {
+};
 
 int main()
 {
-   employee paul("Paul","Economics");
-   somefunc(paul);
+    // Create a list containing integers
+    std::list<Shape*> shape_list;
+
+    Circle c;
+    Rectangle r;
+    shape_list.push_back(&c);
+    shape_list.push_back(&c);
+    shape_list.push_back(&r);
+
+    int s_num = 0, c_num = 0, r_num = 0;
+    std::list<Shape*>::iterator it = shape_list.begin();
+    while (it != shape_list.end()) {
+        if (typeid(**it) == typeid(Shape)) {
+            s_num++;
+        }
+
+        if (typeid(**it) == typeid(Circle)) {
+            c_num++;
+        }
+
+        if (typeid(**it) == typeid(Rectangle)) {
+            r_num++;
+        }
+
+        it++;
+    }
+
+    std::cout << "s_num: " << s_num << ", c_num: " << c_num << ", r_num: " << r_num << std::endl;
+
+
+    s_num = 0, c_num = 0, r_num = 0;
+    it = shape_list.begin();
+    while (it != shape_list.end()) {
+        Circle* c = dynamic_cast<Circle*>(*it);
+        if (c != NULL) {
+            c_num++;
+        }
+
+        Rectangle* r = dynamic_cast<Rectangle*>(*it);
+        if (r != NULL) {
+            r_num++;
+        }
+
+        it++;
+    }
+
+    std::cout << "s_num: " << s_num << ", c_num: " << c_num << ", r_num: " << r_num;
 }
