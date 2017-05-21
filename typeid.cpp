@@ -65,3 +65,9 @@ int main()
 
     std::cout << "s_num: " << s_num << ", c_num: " << c_num << ", r_num: " << r_num;
 }
+
+
+void myDraw(Shape const& obj)
+{
+    obj.draw();
+}
